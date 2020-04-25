@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ch.dao.EquipmentinfoMapper" >
+  <resultMap id="BaseResultMap" type="com.ch.entity.Equipmentinfo" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="madefactor" property="madefactor" jdbcType="VARCHAR" />
+    <result column="brand" property="brand" jdbcType="VARCHAR" />
+    <result column="madetime" property="madetime" jdbcType="VARCHAR" />
+    <result column="function" property="function" jdbcType="VARCHAR" />
+  </resultMap>
+  <select id="selc" resultMap="BaseResultMap">
+    SELECT * FROM equipmentinfo
+    <choose>
+      <when test="madefactor !=null and madefactor != ''">
+        WHERE madefactor LIKE '%${madefactor}%'
+      </when>
+      <otherwise>
+        WHERE 1=1
+      </otherwise>
+    </choose>
+  </select>
+  <select id="selAll" resultMap="BaseResultMap">
+    SELECT * FROM equipmentinfo
+    <choose>
+      <when test="madefactor !=null and madefactor != ''">
+        WHERE madefactor LIKE '%${madefactor}%' limit #{pageNo},#{pagesize}
+      </when>
+      <otherwise>
+        WHERE 1=1 limit #{pageNo},#{pagesize}
+      </otherwise>
+    </choose>
+  </select>
+  <sql id="Base_Column_List" >
+    id, madefactor, brand, madetime, function
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from equipmentinfo
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from equipmentinfo
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.ch.entity.Equipmentinfo" >
+    insert into equipmentinfo (id, madefactor, brand, 
+      madetime, function)
+    values (#{id,jdbcType=INTEGER}, #{madefactor,jdbcType=VARCHAR}, #{brand,jdbcType=VARCHAR}, 
+      #{madetime,jdbcType=VARCHAR}, #{function,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.ch.entity.Equipmentinfo" >
+    insert into equipmentinfo
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="madefactor != null" >
+        madefactor,
+      </if>
+      <if test="brand != null" >
+        brand,
+      </if>
+      <if test="madetime != null" >
+        madetime,
+      </if>
+      <if test="function != null" >
+        function,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="madefactor != null" >
+        #{madefactor,jdbcType=VARCHAR},
+      </if>
+      <if test="brand != null" >
+        #{brand,jdbcType=VARCHAR},
+      </if>
+      <if test="madetime != null" >
+        #{madetime,jdbcType=VARCHAR},
+      </if>
+      <if test="function != null" >
+        #{function,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.ch.entity.Equipmentinfo" >
+    update equipmentinfo
+    <set >
+      <if test="madefactor != null" >
+        madefactor = #{madefactor,jdbcType=VARCHAR},
+      </if>
+      <if test="brand != null" >
+        brand = #{brand,jdbcType=VARCHAR},
+      </if>
+      <if test="madetime != null" >
+        madetime = #{madetime,jdbcType=VARCHAR},
+      </if>
+      <if test="function != null" >
+        function = #{function,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.ch.entity.Equipmentinfo" >
+    update equipmentinfo
+    set madefactor = #{madefactor,jdbcType=VARCHAR},
+      brand = #{brand,jdbcType=VARCHAR},
+      madetime = #{madetime,jdbcType=VARCHAR},
+      function = #{function,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

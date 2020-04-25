@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ch.dao.UserMapper" >
+  <resultMap id="BaseResultMap" type="com.ch.entity.User" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="username" property="username" jdbcType="VARCHAR" />
+    <result column="password" property="password" jdbcType="VARCHAR" />
+    <result column="signintime" property="signintime" jdbcType="VARCHAR" />
+    <result column="signout" property="signout" jdbcType="VARCHAR" />
+    <result column="addpower" property="addpower" jdbcType="VARCHAR" />
+    <result column="isinput" property="isinput" jdbcType="VARCHAR" />
+    <result column="isoutput" property="isoutput" jdbcType="VARCHAR" />
+  </resultMap>
+<select id="login" resultMap="BaseResultMap">
+  SELECT * FROM user WHERE username=#{username} AND password=#{password}
+</select>
+  <select id="selc" resultMap="BaseResultMap">
+    SELECT * FROM user
+    <choose>
+      <when test="username !=null and username != ''">
+        WHERE username LIKE '%${username}%'
+      </when>
+      <otherwise>
+        WHERE 1=1
+      </otherwise>
+    </choose>
+  </select>
+  <select id="selAll" resultMap="BaseResultMap">
+    SELECT * FROM user
+    <choose>
+      <when test="username !=null and username != ''">
+        WHERE username LIKE '%${username}%' limit #{pageNo},#{pagesize}
+      </when>
+      <otherwise>
+        WHERE 1=1 limit #{pageNo},#{pagesize}
+      </otherwise>
+    </choose>
+  </select>
+  <sql id="Base_Column_List" >
+    id, username, password, signintime, signout, addpower, isinput, isoutput
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from user
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from user
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.ch.entity.User" >
+    insert into user (id, username, password, 
+      signintime, signout, addpower, 
+      isinput, isoutput)
+    values (#{id,jdbcType=INTEGER}, #{username,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, 
+      #{signintime,jdbcType=VARCHAR}, #{signout,jdbcType=VARCHAR}, #{addpower,jdbcType=VARCHAR}, 
+      #{isinput,jdbcType=VARCHAR}, #{isoutput,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.ch.entity.User" >
+    insert into user
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="username != null" >
+        username,
+      </if>
+      <if test="password != null" >
+        password,
+      </if>
+      <if test="signintime != null" >
+        signintime,
+      </if>
+      <if test="signout != null" >
+        signout,
+      </if>
+      <if test="addpower != null" >
+        addpower,
+      </if>
+      <if test="isinput != null" >
+        isinput,
+      </if>
+      <if test="isoutput != null" >
+        isoutput,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="username != null" >
+        #{username,jdbcType=VARCHAR},
+      </if>
+      <if test="password != null" >
+        #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="signintime != null" >
+        #{signintime,jdbcType=VARCHAR},
+      </if>
+      <if test="signout != null" >
+        #{signout,jdbcType=VARCHAR},
+      </if>
+      <if test="addpower != null" >
+        #{addpower,jdbcType=VARCHAR},
+      </if>
+      <if test="isinput != null" >
+        #{isinput,jdbcType=VARCHAR},
+      </if>
+      <if test="isoutput != null" >
+        #{isoutput,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.ch.entity.User" >
+    update user
+    <set >
+      <if test="username != null" >
+        username = #{username,jdbcType=VARCHAR},
+      </if>
+      <if test="password != null" >
+        password = #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="signintime != null" >
+        signintime = #{signintime,jdbcType=VARCHAR},
+      </if>
+      <if test="signout != null" >
+        signout = #{signout,jdbcType=VARCHAR},
+      </if>
+      <if test="addpower != null" >
+        addpower = #{addpower,jdbcType=VARCHAR},
+      </if>
+      <if test="isinput != null" >
+        isinput = #{isinput,jdbcType=VARCHAR},
+      </if>
+      <if test="isoutput != null" >
+        isoutput = #{isoutput,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.ch.entity.User" >
+    update user
+    set username = #{username,jdbcType=VARCHAR},
+      password = #{password,jdbcType=VARCHAR},
+      signintime = #{signintime,jdbcType=VARCHAR},
+      signout = #{signout,jdbcType=VARCHAR},
+      addpower = #{addpower,jdbcType=VARCHAR},
+      isinput = #{isinput,jdbcType=VARCHAR},
+      isoutput = #{isoutput,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByUsername" parameterType="com.ch.entity.User" >
+    update user
+    set
+      signintime = #{signintime,jdbcType=VARCHAR}
+    where username = #{username,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByUsernameOut" parameterType="com.ch.entity.User" >
+    update user
+    set
+      signout = #{signout,jdbcType=VARCHAR}
+    where username = #{username,jdbcType=VARCHAR}
+  </update>
+</mapper>

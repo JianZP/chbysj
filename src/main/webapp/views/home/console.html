@@ -1,0 +1,246 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>数据操作 - 数据表格</title>
+  <meta name="renderer" content="webkit">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+  <link rel="stylesheet" href="../../../layuiadmin/layui/css/layui.css" media="all">
+  <link rel="stylesheet" href="../../../layuiadmin/style/admin.css" media="all">
+</head>
+<body>
+
+<div class="layui-card layadmin-header">
+  <div class="layui-breadcrumb" lay-filter="breadcrumb">
+    <a lay-href="">主页</a>
+    <a><cite>组件</cite></a>
+    <a><cite>数据表格</cite></a>
+    <a><cite>数据操作</cite></a>
+  </div>
+</div>
+
+<div class="layui-fluid">
+  <div class="layui-row layui-col-space15">
+    <div class="layui-col-md12">
+      <div class="layui-card">
+        <div class="layui-card-header">数据操作</div>
+        <div class="layui-card-body">
+          <div class="layui-btn-group test-table-operate-btn" style="margin-bottom: 10px;">
+<!--            <button class="layui-btn" data-type="getCheckData">获取选中行数据</button>-->
+<!--            <button class="layui-btn" data-type="add">添加设备</button>-->
+<!--            <button class="layui-btn" data-type="getCheckLength">获取选中数目</button>-->
+<!--            <button class="layui-btn" data-type="isAll">验证是否全选</button>-->
+          </div>
+
+          <table class="layui-hide" id="test-table-operate" lay-filter="test-table-operate"></table>
+
+          <script type="text/html" id="test-table-operate-barDemo">
+<!--            <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="detail">设置设备类型信息</a>-->
+<!--            <a class="layui-btn layui-btn-xs" lay-event="edit">设置设备信息</a>-->
+            <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">设置权限</a>
+          </script>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<input id="keyword" name="keyword" style="display: none">
+<!--添加弹出层-->
+<div class="layui-row" id="popUpdateTest" style="display:none;">
+  <div class="layui-col-md10">
+    <form class="layui-form layui-from-pane" action="" style="margin-top:20px" id="myform" >
+      <div class="layui-form-item">
+        <label class="layui-form-label">设备名称</label>
+        <div class="layui-input-block">
+          <input type="text" name="equipmentname"  required  lay-verify="required" autocomplete="off" placeholder="请输入设备名称" class="layui-input">
+        </div>
+      </div>
+      <div class="layui-form-item">
+        <label class="layui-form-label">使用年限</label>
+        <div class="layui-input-block">
+          <input type="text" name="uselimit"  required  lay-verify="required" autocomplete="off" placeholder="请输入使用年限" class="layui-input">
+        </div>
+      </div>
+      <div class="layui-form-item" style="margin-top:40px">
+        <div class="layui-input-block">
+          <button class="layui-btn  layui-btn-submit " lay-submit="" lay-filter="sub">确认修改</button>
+          <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+<!--设置权限弹出层-->
+<div class="layui-row" id="popSetTest" style="display:none;">
+  <div class="layui-col-md10">
+    <form class="layui-form layui-from-pane" action="" style="margin-top:20px" id="power" >
+      <div class="layui-form-item" style="display: none">
+        <label class="layui-form-label">ID</label>
+        <div class="layui-input-block">
+          <input type="text" id="id" name="id" required  lay-verify="required" autocomplete="off" placeholder="" class="layui-input">
+        </div>
+      </div>
+      <div class="layui-form-item">
+        <label class="layui-form-label">添加权限</label>
+        <div class="layui-input-block">
+          <select name="addpower" lay-filter="addpower">
+            <option value="是">是</option>
+            <option value="否" selected="">否</option>
+          </select>
+        </div>
+      </div>
+      <div class="layui-form-item">
+        <label class="layui-form-label">可导入权限</label>
+        <div class="layui-input-block">
+          <select name="isinput" lay-filter="isinput">
+            <option value="是">是</option>
+            <option value="否" selected="">否</option>
+          </select>
+        </div>
+      </div>
+      <div class="layui-form-item">
+        <label class="layui-form-label">可导出权限</label>
+        <div class="layui-input-block">
+          <select name="isoutput" lay-filter="isoutput">
+            <option value="是">是</option>
+            <option value="否" selected="">否</option>
+          </select>
+        </div>
+      </div>
+      <div class="layui-form-item" style="margin-top:40px">
+        <div class="layui-input-block">
+          <button class="layui-btn  layui-btn-submit " lay-submit="" lay-filter="power">确认修改</button>
+          <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+<script src="../../../layuiadmin/layui/layui.js"></script>
+<script>
+  layui.config({
+    base: '../../../layuiadmin/' //静态资源所在路径
+  }).extend({
+    index: 'lib/index' //主入口模块
+  }).use(['index', 'table'], function(){
+    var table = layui.table
+            ,admin = layui.admin;
+    var input=document.getElementById("keyword");
+    var username=input.value;
+    table.render({
+      elem: '#test-table-operate'
+      ,url: 'http://localhost:8080/selAllUser?'+'username'+username
+      ,width: admin.screen() > 1 ? 1050: ''
+      ,height: 472.5
+      ,page: { //支持传入 laypage 组件的所有参数（某些参数除外，如：jump/elem） - 详见文档
+        layout: ['limit', 'count', 'prev', 'page', 'next', 'skip'] //自定义分页布局
+        ,groups: 1 //只显示 1 个连续页码
+        ,first: true //不显示首页
+        ,last: true //不显示尾页
+      }
+      ,cols: [[
+        {field:'id', width:80, title: 'ID', sort: true}
+        ,{field:'username', width:200, title: '用户名'}
+        ,{field:'addpower', width:200, title: '设备添加权限'}
+        ,{field:'isinput', width:200, title: '是否可以导入'}
+        ,{field:'isoutput', width:200, title: '是否可以导出'}
+        ,{width:166.6, align:'center', toolbar: '#test-table-operate-barDemo'}
+      ]]
+      ,page: true
+    });
+
+    //监听表格复选框选择
+    table.on('checkbox(test-table-operate)', function(obj){
+      console.log(obj)
+    });
+    //监听工具条
+    table.on('tool(test-table-operate)', function(obj){
+      var data = obj.data;
+      if(obj.event === 'detail'){
+        layer.msg('ID：'+ data.id + ' 的查看操作');
+      } else if(obj.event === 'del'){
+        $("#id").val(data.id)
+          layer.open({
+            type: 1,
+            title: "设置权限",
+            area: ['420px', '330px'],
+            content: $("#popSetTest")//引用的弹出层的页面层的方式加载修改界面表单
+          });
+      } else if(obj.event === 'edit'){
+        alert(data.id)
+      }
+    });
+
+    var $ = layui.$, active = {
+      getCheckData: function(){ //获取选中数据
+        var checkStatus = table.checkStatus('test-table-operate')
+                ,data = checkStatus.data;
+        layer.alert(JSON.stringify(data));
+      }
+      ,getCheckLength: function(){ //获取选中数目
+        var checkStatus = table.checkStatus('test-table-operate')
+                ,data = checkStatus.data;
+        layer.msg('选中了：'+ data.length + ' 个');
+      }
+      ,add:function () {
+        layer.open({
+          //layer提供了5种层类型。可传入的值有：0（信息框，默认）1（页面层）2（iframe层）3（加载层）4（tips层）
+          type: 1,
+          title: "添加设备",
+          area: ['420px', '330px'],
+          content: $("#popUpdateTest")//引用的弹出层的页面层的方式加载修改界面表单
+        });
+      }
+      ,isAll: function(){ //验证是否全选
+        var checkStatus = table.checkStatus('test-table-operate');
+        layer.msg(checkStatus.isAll ? '全选': '未全选')
+      }
+    };
+
+    $('.test-table-operate-btn .layui-btn').on('click', function(){
+      var type = $(this).data('type');
+      active[type] ? active[type].call(this) : '';
+    });
+    layui.form.on('submit(power)', function(data){
+      $.ajax({
+        url:'http://localhost:8080/updatePower',
+        method:'post',
+        data:data.field,
+        dataType:'JSON',
+        success:function(res){
+          if(res.code='0'){
+            parent.closeIframe(res.msg);
+          }
+          else
+            alert(res.msg);
+        },
+        error:function (data) {
+
+        }
+      }) ;
+    });
+
+    layui.form.on('submit(sub)', function(data){
+      $.ajax({
+        url:'http://localhost:8080/insert',
+        method:'post',
+        data:data.field,
+        dataType:'JSON',
+        success:function(res){
+          if(res.code='0'){
+            parent.closeIframe(res.msg);
+          }
+          else
+            alert(res.msg);
+        },
+        error:function (data) {
+
+        }
+      }) ;
+    });
+  });
+</script>
+</body>
+</html>

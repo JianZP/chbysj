@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ch.dao.EquipmentMapper" >
+  <resultMap id="BaseResultMap" type="com.ch.entity.Equipment" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="equipmentname" property="equipmentname" jdbcType="VARCHAR" />
+    <result column="uselimit" property="uselimit" jdbcType="INTEGER" />
+    <result column="status" property="status" jdbcType="VARCHAR" />
+    <result column="isinput" property="isinput" jdbcType="VARCHAR" />
+    <result column="isoutput" property="isoutput" jdbcType="VARCHAR" />
+    <result column="typeid" property="typeid" jdbcType="INTEGER" />
+    <result column="infoid" property="infoid" jdbcType="INTEGER" />
+  </resultMap>
+  <select id="selc" resultMap="BaseResultMap">
+    SELECT * FROM equipment
+  </select>
+  <select id="selAll" resultMap="BaseResultMap">
+    SELECT * FROM equipment where 1=1 limit #{pageNo},#{pagesize}
+  </select>
+  <sql id="Base_Column_List" >
+    id, equipmentname, uselimit, status, isinput, isoutput, typeid, infoid
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from equipment
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from equipment
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.ch.entity.Equipment" >
+    insert into equipment (id, equipmentname, uselimit,
+      status, isinput, isoutput, 
+      typeid, infoid)
+    values (#{id,jdbcType=INTEGER}, #{equipmentname,jdbcType=VARCHAR}, #{uselimit,jdbcType=INTEGER},
+      #{status,jdbcType=VARCHAR}, #{isinput,jdbcType=VARCHAR}, #{isoutput,jdbcType=VARCHAR}, 
+      #{typeid,jdbcType=INTEGER}, #{infoid,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="com.ch.entity.Equipment" >
+    insert into equipment
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="equipmentname != null" >
+        equipmentname,
+      </if>
+      <if test="uselimit != null" >
+        uselimit,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="isinput != null" >
+        isinput,
+      </if>
+      <if test="isoutput != null" >
+        isoutput,
+      </if>
+      <if test="typeid != null" >
+        typeid,
+      </if>
+      <if test="infoid != null" >
+        infoid,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="equipmentname != null" >
+        #{equipmentname,jdbcType=VARCHAR},
+      </if>
+      <if test="uselimit != null" >
+        #{uselimit,jdbcType=INTEGER},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=VARCHAR},
+      </if>
+      <if test="isinput != null" >
+        #{isinput,jdbcType=VARCHAR},
+      </if>
+      <if test="isoutput != null" >
+        #{isoutput,jdbcType=VARCHAR},
+      </if>
+      <if test="typeid != null" >
+        #{typeid,jdbcType=INTEGER},
+      </if>
+      <if test="infoid != null" >
+        #{infoid,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.ch.entity.Equipment" >
+    update equipment
+    <set >
+      <if test="equipmentname != null and equipmentname != ''" >
+        equipmentname = #{equipmentname,jdbcType=VARCHAR},
+      </if>
+      <if test="uselimit != null and uselimit != ''" >
+        uselimit = #{uselimit,jdbcType=INTEGER},
+      </if>
+      <if test="status != null and status != ''">
+        status = #{status,jdbcType=VARCHAR},
+      </if>
+      <if test="isinput != null and isinput != ''" >
+        isinput = #{isinput,jdbcType=VARCHAR},
+      </if>
+      <if test="isoutput != null and isoutput != ''" >
+        isoutput = #{isoutput,jdbcType=VARCHAR},
+      </if>
+      <if test="typeid != null and typeid != ''" >
+        typeid = #{typeid,jdbcType=INTEGER},
+      </if>
+      <if test="infoid != null and infoid != ''" >
+        infoid = #{infoid,jdbcType=INTEGER},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.ch.entity.Equipment" >
+    update equipment
+    set equipmentname = #{equipmentname,jdbcType=VARCHAR},
+      uselimit = #{uselimit,jdbcType=INTEGER},
+      status = #{status,jdbcType=VARCHAR},
+      isinput = #{isinput,jdbcType=VARCHAR},
+      isoutput = #{isoutput,jdbcType=VARCHAR},
+      typeid = #{typeid,jdbcType=INTEGER},
+      infoid = #{infoid,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>
